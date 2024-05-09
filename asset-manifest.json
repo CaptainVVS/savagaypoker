@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/savagaypoker/static/css/main.33552cdf.css",
+    "main.js": "/savagaypoker/static/js/main.b6beb448.js",
+    "static/js/453.b6b3762c.chunk.js": "/savagaypoker/static/js/453.b6b3762c.chunk.js",
+    "index.html": "/savagaypoker/index.html",
+    "main.33552cdf.css.map": "/savagaypoker/static/css/main.33552cdf.css.map",
+    "main.b6beb448.js.map": "/savagaypoker/static/js/main.b6beb448.js.map",
+    "453.b6b3762c.chunk.js.map": "/savagaypoker/static/js/453.b6b3762c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.33552cdf.css",
+    "static/js/main.b6beb448.js"
+  ]
+}
