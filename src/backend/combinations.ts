@@ -1,40 +1,20 @@
+import {Card, Combination, Combinations} from "./types";
+import {sortCards} from "./utils";
+
 const ROYAL_VALUES_SET = new Set([12, 11, 10, 9, 8])
 
 
-export enum Combinations {
-  GreaterCard,
-  Pair,
-  TwoPairs,
-  Set,
-  Straight,
-  Flush,
-  FullHouse,
-  Quads,
-  StraightFlush,
-  FlashRoyal,
-}
-
-
-export interface Card {
-  suit: number;
-  value: number;
-}
-
-
-export function findCombination(cards7: Card[]) {
+export function getCombination(cards7: Card[]): Combination {
   const flush = findFlush(cards7)
   const straight = findStraight(cards7)
-  const { quad, set, pairs } = getQuadsSetAndPairs(cards7)
+  const {quad, set, pairs} = getQuadsSetAndPairs(cards7)
 
   // flush royal
   if (flush) {
     const royalCards = flush.filter((card) => ROYAL_VALUES_SET.has(card.value))
 
     if (royalCards.length === 5) {
-      return {
-        combination: Combinations.FlashRoyal,
-        cards: royalCards
-      }
+      return createCombination(Combinations.FlashRoyal, royalCards)
     }
   }
 
@@ -42,76 +22,49 @@ export function findCombination(cards7: Card[]) {
   if (flush) {
     const straightFlushes = findStraight(flush)
     if (straightFlushes) {
-      return {
-        combination: Combinations.StraightFlush,
-        cards: straightFlushes
-      }
+      return createCombination(Combinations.StraightFlush, straightFlushes)
     }
   }
 
   // quads
   if (quad) {
-    return {
-      combination: Combinations.Quads,
-      cards: takeUpTo5(quad, cards7)
-    }
+    return createCombination(Combinations.Quads, takeUpTo5(quad, cards7))
   }
 
   // full house
   if (set && pairs[0]) {
-    const cards = [...set, ...pairs[0]]
-    return {
-      combination: Combinations.FullHouse,
-      cards: cards.slice(0, 5)
-    }
+    const cards = sortCards([...set, ...pairs[0]]);
+    return createCombination(Combinations.FullHouse, cards)
   }
 
   // flush
   if (flush) {
-    return {
-      combination: Combinations.Flush,
-      cards: flush.slice(0, 5)
-    }
+    return createCombination(Combinations.Flush, flush.slice(0, 5))
   }
 
   // straight
   if (straight) {
-    return {
-      combination: Combinations.Straight,
-      cards: straight.slice(0, 5)
-    }
+    return createCombination(Combinations.Straight, straight)
   }
 
   // set
   if (set) {
-    return {
-      combination: Combinations.Set,
-      cards: takeUpTo5(set, cards7)
-    }
+    return createCombination(Combinations.Set, takeUpTo5(set, cards7))
   }
 
   // two pairs
   if (pairs.length >= 2) {
     const cards = [...pairs[0], ...pairs[1]]
-    return {
-      combination: Combinations.TwoPairs,
-      cards: takeUpTo5(cards, cards7)
-    }
+    return createCombination(Combinations.TwoPairs, takeUpTo5(cards, cards7))
   }
 
   // pair
   if (pairs[0]) {
-    return {
-      combination: Combinations.Pair,
-      cards: takeUpTo5(pairs[0], cards7)
-    }
+    return createCombination(Combinations.Pair, takeUpTo5(pairs[0], cards7))
   }
 
   // higher card
-  return {
-    combination: Combinations.GreaterCard,
-    cards: takeUpTo5([], cards7)
-  }
+  return createCombination(Combinations.GreaterCard, takeUpTo5([], cards7))
 
 }
 
@@ -128,12 +81,13 @@ function findStraight(cards7: Card[]) {
   const cardValues = [...cardsMappedByValue.keys()];
   cardValues.sort((a, b) => b - a);
 
-  const straight = find5StraightValues(cardValues);
+  const straightValues = find5StraightValues(cardValues);
 
-  if (straight.length === 0)
+  if (straightValues.length === 0)
     return undefined;
 
-  return straight.map((key) => cardsMappedByValue.get(key)!)
+  const straightCards = straightValues.map((key) => cardsMappedByValue.get(key)!)
+  return straightCards.slice(0, 5);
 }
 
 function find5StraightValues(cardValues: number[]) {
@@ -161,7 +115,8 @@ function findFlush(cards7: Card[]) {
 
   for (const bucket of cardsBuckets)
     if (bucket.length >= 5)
-      return bucket
+      return sortCards(bucket)
+
 }
 
 
@@ -176,7 +131,10 @@ function getQuadsSetAndPairs(cards7: Card[]) {
   const set = cardsBuckets.find((bucket) => bucket.length === 3)
   const pairs = cardsBuckets.filter((bucket) => bucket.length === 2)
 
-  return { quad, set, pairs }
+  // sort pairs array descending
+  pairs.sort((a, b) => b[0].value - a[0].value)
+
+  return {quad, set, pairs}
 }
 
 function groupBy(cards7: Card[], bucketIndexFunc: (card: Card) => number) {
@@ -187,7 +145,6 @@ function groupBy(cards7: Card[], bucketIndexFunc: (card: Card) => number) {
 
     if (cardsBuckets[bucketIndex] === undefined)
       cardsBuckets[bucketIndex] = []
-
     cardsBuckets[bucketIndex].push(card)
   }
 
@@ -210,27 +167,20 @@ function takeUpTo5(combination: Card[], cards7: Card[]) {
 }
 
 
-export function createDeck() {
-  const cardsDeck: Card[] = [];
-
-  for (let suit = 0; suit < 4; suit++)
-    for (let value = 0; value < 13; value++) {
-      const card: Card = { suit, value }
-      cardsDeck.push(card);
-    }
-
-  shuffle(cardsDeck)
-  shuffle(cardsDeck)
-  shuffle(cardsDeck)
-  shuffle(cardsDeck)
-
-  return cardsDeck;
+function createCombination(combination: Combinations, cards: Card[]): Combination {
+  if (cards.length != 5) throw new Error("not 5 cards combination")
+  const score = calcCombinationScore(combination, cards);
+  return {combination, cards, score}
 }
 
 
-function shuffle(array: any[]) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
+function calcCombinationScore(combination: Combinations, cards: Card[]) {
+  const cardValues = cards.map(card => card.value)
+
+  return [combination, ...cardValues]
+    .reverse()
+    .reduce(
+      (acc, e, i) => acc + e * 12 ** i,
+      0
+    )
 }

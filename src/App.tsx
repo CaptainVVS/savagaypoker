@@ -1,56 +1,50 @@
-import React from 'react';
-import './App.css';
-import { Card, Combinations, createDeck, findCombination } from "./logica";
+import React, {useCallback, useEffect, useState} from 'react';
+import {Game} from "./backend/game";
+import {GameHtml} from "./components/GameHtml";
 
 
-const CARD_SUITS = ["♣", "♦", "♥", "♠"];
-const CARD_VALUES = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
-// 0="2", ..., 9="J", 10="Q", 11="K", 12="A"
 
-function App() {
+export default function App() {
+  const [game, setGame] = useState<Game>();
 
-  let combination;
-  let desk: Card[] = [];
-  let hand: Card[] = [];
+  const [, updateState] = useState({});
+  const forceUpdate = useCallback(() => updateState({}), []);
+
+  function newGame(players: number, defaultBalance: number) {
+    const game_ = new Game(players, defaultBalance, forceUpdate);
+    setGame(game_)
+  }
+
+  if (!game) {
+    return <GameSetup callback={newGame}/>
+  }
+
+  return <GameHtml game={game}/>
+
+}
 
 
-  const cardsDeck = createDeck();
+function GameSetup({callback}: {callback: (players: number, defaultBalance: number) => void}) {
+  const [playersNum, setPlayersNum] = useState(2);
+  const [defaultBalance, setDefaultBalance] = useState(500);
 
-
-  desk = [cardsDeck.pop()!, cardsDeck.pop()!, cardsDeck.pop()!, cardsDeck.pop()!, cardsDeck.pop()!,]
-  hand = [cardsDeck.pop()!, cardsDeck.pop()!]
-
-  combination = findCombination([...desk, ...hand])
-
+  function startGame() {
+    callback(playersNum, defaultBalance)
+  }
 
   return (
-    <div className="App">
-      <CardsHTML cards={desk}/>
-      <hr/>
-      <CardsHTML cards={hand}/>
-      <hr/>
-      <div className={"combinationName"}>{Combinations[combination.combination]}</div>
+    <div>
+      Players:
+      <input value={playersNum}
+             onChange={(e) => setPlayersNum(+e.target.value)}
+      />
       <br/>
-      <CardsHTML cards={combination.cards}/>
+      Default balance:
+      <input value={defaultBalance}
+             onChange={(e) => setDefaultBalance(+e.target.value)}
+      />
+      <br/>
+      <button onClick={startGame}>Start game</button>
     </div>
-  );
+  )
 }
-
-
-function CardsHTML({cards}: {cards: Card[]}) {
-  return <div className={"cards"}>
-    {cards.map((card, i) =>
-      <CardHTML key={i} card={card}/>
-    )}
-  </div>
-}
-
-function CardHTML({card}: { card: Card }) {
-  return <div className={`suit-${card.suit} card`}>
-    {CARD_SUITS[card.suit]}
-    {CARD_VALUES[card.value]}
-  </div>
-}
-
-
-export default App;

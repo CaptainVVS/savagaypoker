@@ -8,6 +8,35 @@ body {
   justify-content: center;
 }
 
+.player {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.player-left {
+  color: white;
+  width: 30%;
+}
+
+.player-center {
+  width: 30%;
+}
+
+.player-right {
+  width: 30%;
+}
+
+
+.player-turn {
+  background: #57ef6d;
+}
+
+.player-fold {
+  background: #ef5757;
+}
+
+
 .suit-0{
   color: #3e950f;
 }
@@ -19,13 +48,6 @@ body {
 }
 .suit-3{
   color: #2A14A1;
-}
-
-.combinationName {
-  font-size: 22pt;
-  color: white;
-  text-transform: uppercase;
-  font-weight: bolder;
 }
 
 
