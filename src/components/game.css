@@ -1,6 +1,7 @@
 body {
   background: #4d904d;
   text-align: center;
+  color: white;
 }
 
 .cards {
@@ -12,10 +13,11 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
+
+  padding: 5px;
 }
 
 .player-left {
-  color: white;
   width: 30%;
 }
 
@@ -27,32 +29,37 @@ body {
   width: 30%;
 }
 
+.player-info-blind {
+  font-family: monospace;
+  font-style: italic;
+}
 
 .player-turn {
-  background: #57ef6d;
+  background: rgba(100, 255, 100, 0.50);
 }
 
 .player-fold {
-  background: #ef5757;
+  background: rgba(240, 75, 75, 0.5);
 }
 
 
 .suit-0{
-  color: #3e950f;
+  color: #3e950f !important;
 }
 .suit-1{
-  color: #F38315;
+  color: #F38315 !important;;
 }
 .suit-2{
-  color: #DB0023;
+  color: #DB0023 !important;;
 }
 .suit-3{
-  color: #2A14A1;
+  color: #2A14A1 !important;;
 }
 
 
 .card {
-  box-shadow: 7px 0px 9px #103d17;
+  color: black;
+  box-shadow: 7px 0 9px #103d17;
   text-align: center;
   font-size: 22pt;
   border-radius: 10px;

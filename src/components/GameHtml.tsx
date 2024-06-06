@@ -6,38 +6,34 @@ import {Card, Combinations} from "../backend/types";
 import './game.css';
 
 
-
-export function GameHtml({game}: {game: Game}) {
+export function GameHtml({game}: { game: Game }) {
 
   const stageTitle = ["Pre Flop", "Flop", "Turn", "River"][game.stage]
   const stageDeskCardsCount = [0, 3, 4, 5][game.stage]
   const stageDeskCards = game.desk.slice(0, stageDeskCardsCount)
 
   return (
-    <div className="App">
-      <br/>
-
+    <div>
       {
         game.isRoundOver &&
           <button onClick={() => game.newRound()}>NEXT</button>
       }
 
       <h1>{stageTitle}</h1>
+
       <CardsHTML cards={stageDeskCards}/>
 
       <hr/>
 
       {
-        game.players.map((player) => <>
-            <PlayerHTML key={player.index} player={player}/>
-            <hr/>
-          </>
-        )}
+        game.players.map((player) =>
+          <PlayerHTML key={player.index} player={player}/>
+        )
+      }
 
     </div>
   );
 }
-
 
 
 function PlayerHTML({player}: { player: Player }) {
@@ -133,13 +129,15 @@ function PlayerShowableCards({cards, defaultIsShow}: { cards: Card[]; defaultIsS
 
 function PlayerInfo({player}: { player: Player }) {
   return <>
-    <div>Player {player.index + 1}</div>
+    <div><strong>Player {player.index + 1}</strong></div>
     <div>Balance: {player.balance}</div>
     <div>Round Bet: {player.roundBet}</div>
     <div>Stage Bet: {player.stageBet}</div>
-    {player.index === player.game.dealerIndex && <div>dealer</div>}
-    {player.index === player.game.smallBlindIndex() && <div>small blind</div>}
-    {player.index === player.game.bigBlindIndex() && <div>big blind</div>}
+    <div className={"player-info-blind"}>
+      {player.index === player.game.dealerIndex && "D "}
+      {player.index === player.game.smallBlindIndex() && "S "}
+      {player.index === player.game.bigBlindIndex() && "B "}
+    </div>
   </>;
 }
 

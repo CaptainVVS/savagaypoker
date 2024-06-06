@@ -77,6 +77,8 @@ export class Game {
   nextStage() {
     this.stage++;
     this.stagePlayerIndex = this.dealerIndex;
+    this.nextPlayer();  // start from small blind and skip players that fold
+
     this.maxStageBet = 0;
     this.players.forEach(p => p.newStage())
 
@@ -86,6 +88,15 @@ export class Game {
     this.update();
   }
 
+  nextPlayer() {
+    // find next player that can do something
+    for (let i = 0; i < this.players.length; i++) {
+      this.stagePlayerIndex = (this.stagePlayerIndex + 1) % this.players.length;
+      const player = this.currentPlayer();
+      if (player.isFold || player.isAllIn()) continue;
+      break;
+    }
+  }
 
   playerFinishTurn() {
     if (this.isWalkover())
@@ -94,13 +105,7 @@ export class Game {
     if (this.isAllBetsDone())
       return this.nextStage();
 
-    // find next player that can do something
-    for (let i = 0; i < this.players.length; i++) {
-      this.stagePlayerIndex = (this.stagePlayerIndex + 1) % this.players.length;
-      const player = this.currentPlayer();
-      if (player.isFold || player.isAllIn()) continue;
-      break;
-    }
+   this.nextPlayer();
 
     this.update();
   }
