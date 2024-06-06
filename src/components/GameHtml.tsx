@@ -14,14 +14,15 @@ export function GameHtml({game}: { game: Game }) {
 
   return (
     <div>
+
+      <h2>{stageTitle}</h2>
+
+      <CardsHTML cards={stageDeskCards}/>
+
       {
         game.isRoundOver &&
           <button onClick={() => game.newRound()}>NEXT</button>
       }
-
-      <h1>{stageTitle}</h1>
-
-      <CardsHTML cards={stageDeskCards}/>
 
       <hr/>
 
