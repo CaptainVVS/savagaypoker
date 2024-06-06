@@ -168,7 +168,7 @@ function takeUpTo5(combination: Card[], cards7: Card[]) {
 
 
 function createCombination(combination: Combinations, cards: Card[]): Combination {
-  if (cards.length != 5) throw new Error("not 5 cards combination")
+  if (cards.length !== 5) throw new Error("not 5 cards combination")
   const score = calcCombinationScore(combination, cards);
   return {combination, cards, score}
 }

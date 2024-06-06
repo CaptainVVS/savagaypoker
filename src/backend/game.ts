@@ -108,7 +108,7 @@ export class Game {
   
   isAllBetsDone() {
     for (const player of this.players) {
-      if (player.balance == 0) continue;
+      if (player.balance === 0) continue;
       if (player.isFold) continue;
       if (!player.finishedStage) return false;
       if (player.stageBet < this.maxStageBet) return false;
@@ -167,8 +167,8 @@ export class Player {
   public combination?: Combination;
   public roundReward: number = 0;
 
-  isMyTurn = () => this.game.stagePlayerIndex == this.index;
-  isAllIn = () => this.balance == 0;
+  isMyTurn = () => this.game.stagePlayerIndex === this.index;
+  isAllIn = () => this.balance === 0;
   getCallValue = () => Math.min(this.balance, this.game.maxStageBet - this.stageBet);
   getMinRaise = () => Math.min(this.balance, this.game.maxStageBet + this.game.bigBlind());
 

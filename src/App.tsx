@@ -1,7 +1,6 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Game} from "./backend/game";
 import {GameHtml} from "./components/GameHtml";
-
 
 
 export default function App() {
