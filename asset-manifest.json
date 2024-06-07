@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/savagaypoker/static/css/main.a98f37a1.css",
-    "main.js": "/savagaypoker/static/js/main.5a365ccc.js",
+    "main.js": "/savagaypoker/static/js/main.029936d5.js",
     "index.html": "/savagaypoker/index.html",
     "main.a98f37a1.css.map": "/savagaypoker/static/css/main.a98f37a1.css.map",
-    "main.5a365ccc.js.map": "/savagaypoker/static/js/main.5a365ccc.js.map"
+    "main.029936d5.js.map": "/savagaypoker/static/js/main.029936d5.js.map"
   },
   "entrypoints": [
     "static/css/main.a98f37a1.css",
-    "static/js/main.5a365ccc.js"
+    "static/js/main.029936d5.js"
   ]
 }
