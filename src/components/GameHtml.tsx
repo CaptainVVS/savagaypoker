@@ -112,7 +112,7 @@ function PlayerControls({player}: { player: Player }) {
 
 function PlayerShowableCards({cards, defaultIsShow}: { cards: Card[]; defaultIsShow: boolean }) {
   const [showingCards, setShowingCards] = useState(false);
-  const handleShow = (status: boolean) => () => setShowingCards(status)
+  const handleShow = () => setShowingCards(old => !old)
 
   const isShowing = (defaultIsShow || showingCards);
 
@@ -120,8 +120,7 @@ function PlayerShowableCards({cards, defaultIsShow}: { cards: Card[]; defaultIsS
     <CardsHTML cards={cards} isHidden={!isShowing}/>
     {
       !defaultIsShow &&
-        <button onMouseDown={handleShow(true)}
-                onMouseUp={handleShow(false)}>
+        <button onClick={handleShow}>
             Show cards
         </button>
     }
